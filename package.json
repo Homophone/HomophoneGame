@@ -4,7 +4,11 @@
   "private": true,
   "scripts": {
     "ios": "react-native run-ios",
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "ios-deploy": "ios-deploy",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "lint-watch": "./node_modules/eslint-watch/bin/esw --watch --cache --fix"
   },
   "dependencies": {
     "@expo/vector-icons": "^5.0.0",
@@ -24,14 +28,11 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-react-native": "^1.9.2",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-react": "^5.0.0",
-    "eslint-plugin-flowtype": "^2.33.0",
-    "eslint-plugin-graphql": "^0.8.1",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-node": "^4.2.2",
@@ -40,8 +41,6 @@
     "eslint-plugin-react-native": "^2.3.2",
     "eslint-plugin-standard": "^3.0.1",
     "eslint-watch": "^3.1.0",
-    "flow-bin": "^0.47.0",
-    "flow-watch": "^1.1.1",
     "node-inspector": "^1.1.1"
   }
 }

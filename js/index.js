@@ -10,8 +10,8 @@ import {
   StyleSheet,
   View
 } from 'react-native'
-import { StyleProvider, Button, Text, Icon } from 'native-base'
-import { lightBlue, darkBlue, orange, white } from './colors'
+import { Button, Text, Icon } from 'native-base'
+import { lightBlue, darkBlue, white } from './colors'
 
 export default class HomophoneGame extends Component {
   render() {

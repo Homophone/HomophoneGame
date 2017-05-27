@@ -1,0 +1,96 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jasmine": true
+  },
+  "extends": [
+    "airbnb",
+    "standard",
+    "standard-react",
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true,
+      "classes": true
+    },
+    "sourceType": "module"
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "react",
+    "react-native"
+  ],
+  "rules": {
+    "indent": [
+      "error",
+      2
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "never"
+    ],
+    "arrow-parens": ["error", "always", { "requireForBlockBody": true }],
+    "arrow-body-style": ["error", "as-needed"],
+    "arrow-spacing": "error",
+    "brace-style": 2,
+    "no-trailing-spaces": 2,
+    "spaced-comment": 2,
+    "curly": 2,
+    "comma-dangle": 2,      // disallow trailing commas in object literals
+    "key-spacing": 2,
+    "no-var": "error",
+    "indent": ["error", 2],
+    "prefer-arrow-callback": 2,
+    "react-native/no-unused-styles": 2,
+    "react-native/split-platform-components": 2,
+    "react-native/no-inline-styles": 2,
+    "react-native/no-color-literals": 2,
+    "react/jsx-curly-spacing": 2,
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "eqeqeq": [
+      "error",
+      "smart"
+    ],
+    "eol-last": [
+      "error",
+      "always"
+    ],
+    "react/jsx-filename-extension": 0,
+    "import/no-dynamic-require": 0,
+    "import/no-named-as-default": 0,
+    "import/prefer-default-export": 0,
+    "react/require-default-props": 0,
+    "react/forbid-prop-types": 0,
+    "react/no-string-refs": 0,
+    "react/no-unused-prop-types": 0,
+    "import/first": 0,
+    "react/sort-comp": 0,
+    "react/prefer-stateless-function": 0,
+    "react/no-array-index-key": 0,
+    "import/no-unresolved": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+      "extensions": [".js", ".android.js", "ios.js"]
+      }
+    }
+  }
+}
