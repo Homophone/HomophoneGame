@@ -14,7 +14,7 @@
     "react": "^16.0.0-alpha.6",
     "react-mixin": "^3.0.5",
     "react-native": "0.44.2",
-    "react-native-vector-icons": "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-4.1.1.tgz",
+    "react-native-vector-icons": "^4.1.1",
     "react-navigation": "^1.0.0-beta.11",
     "react-redux": "^5.0.5",
     "react-timer-mixin": "^0.13.3",
