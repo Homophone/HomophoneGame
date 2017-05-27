@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component, PropTypes } from 'react'
 import {
   AppRegistry,
@@ -13,7 +7,11 @@ import {
 import { Button, Text, Icon } from 'native-base'
 import { lightBlue, darkBlue, white } from '../colors'
 
-export default class Home extends Component {
+// redux test to be removed
+import { connect } from 'react-redux'
+import { add, subtract } from '../actions'
+
+class Home extends Component {
   static navigationOptions = {
     title: 'Welcome',
     headerStyle: {
@@ -57,15 +55,29 @@ export default class Home extends Component {
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>LEADERBOARD</Text>
         </Button>
+
+        <Text>{ this.props.value }</Text>
+        <Button
+          onPress={this.props.onAdd}
+        >
+          <Text>Add</Text>
+        </Button>
+        <Button
+          onPress={this.props.onSubtract}
+        >
+          <Text>Subtract</Text>
+        </Button>
       </View>
     )
   }
 }
 
 Home.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  value: PropTypes.number.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onSubtract: PropTypes.func.isRequired
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -77,4 +89,24 @@ const styles = StyleSheet.create({
   }
 })
 
-AppRegistry.registerComponent('Home', () => Home)
+const mapStateToProps = (state) => ({
+  value: state.counter.value
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  onAdd: () => {
+    dispatch(add())
+  },
+  onSubtract: () => {
+    dispatch(subtract())
+  }
+})
+
+const ConnectedComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home)
+
+export default ConnectedComponent
+
+AppRegistry.registerComponent('Home', () => ConnectedComponent)
