@@ -20,9 +20,7 @@ export default class Play extends Component {
     headerStyle: {
       backgroundColor: white
     },
-    headerTitleStyle: {
-      color: darkBlue
-    }
+    headerTintColor: darkBlue
   }
 
   render() {
