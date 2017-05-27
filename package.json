@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "ios": "react-native run-ios",
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
     "@expo/vector-icons": "^5.0.0",
@@ -25,7 +24,6 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
-    "babel-jest": "^20.0.3",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-react-native": "^1.9.2",
     "eslint": "^3.19.0",
@@ -44,12 +42,6 @@
     "eslint-watch": "^3.1.0",
     "flow-bin": "^0.47.0",
     "flow-watch": "^1.1.1",
-    "jest": "^20.0.4",
-    "jest-react-native": "^18.0.0",
-    "node-inspector": "^1.1.1",
-    "react-test-renderer": "16.0.0-alpha.6"
-  },
-  "jest": {
-    "preset": "react-native"
+    "node-inspector": "^1.1.1"
   }
 }
