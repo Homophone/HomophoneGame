@@ -1,14 +1,11 @@
-let initialValue = 0
 export const add = () => {
   return {
-    type: 'ADD',
-    value: initialValue++
+    type: 'ADD'
   }
 }
 
 export const subtract = () => {
   return {
-    type: 'SUBTRACT',
-    value: initialValue--
+    type: 'SUBTRACT'
   }
 }
