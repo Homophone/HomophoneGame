@@ -1,5 +1,5 @@
 import {
-  StackNavigator,
+  StackNavigator
 } from 'react-navigation'
 import Home from './screens/home'
 import Play from './screens/play'
@@ -10,6 +10,6 @@ import {
 const HomophoneGame = StackNavigator({
   Main: { screen: Home },
   Play: { screen: Play }
-});
+})
 
 AppRegistry.registerComponent('HomophoneGame', () => HomophoneGame)

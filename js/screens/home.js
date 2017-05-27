@@ -4,14 +4,14 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   AppRegistry,
   StyleSheet,
   View
 } from 'react-native'
 import { Button, Text, Icon } from 'native-base'
-import { lightBlue, darkBlue, orange, white } from '../colors'
+import { lightBlue, darkBlue, white } from '../colors'
 
 export default class Home extends Component {
   static navigationOptions = {
@@ -33,20 +33,26 @@ export default class Home extends Component {
 
         <Icon name='home' />
 
-        <Button block rounded
+        <Button
+          block
+          rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
           onPress={() => navigate('Play')}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>PLAY</Text>
         </Button>
 
-        <Button block rounded
+        <Button
+          block
+          rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>STATS</Text>
         </Button>
 
-        <Button block rounded
+        <Button
+          block
+          rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>LEADERBOARD</Text>
@@ -55,6 +61,11 @@ export default class Home extends Component {
     )
   }
 }
+
+Home.propTypes = {
+  navigation: PropTypes.object.isRequired
+}
+
 
 const styles = StyleSheet.create({
   container: {

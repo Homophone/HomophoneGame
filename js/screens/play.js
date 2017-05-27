@@ -11,7 +11,7 @@ import {
   View,
   Image
 } from 'react-native'
-import { Button, Text, Icon } from 'native-base'
+import { Button, Text } from 'native-base'
 import { lightBlue, darkBlue, orange, white } from '../colors'
 
 export default class Play extends Component {
@@ -34,23 +34,28 @@ export default class Play extends Component {
         </View>
 
         <View style={styles.progressContainer}>
-          <View style={styles.progress}>
-          </View>
+          <View style={styles.progress} />
         </View>
 
-        <Button block rounded
+        <Button
+          block
+          rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BEAR</Text>
         </Button>
 
-        <Button block rounded
+        <Button
+          block
+          rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BARE</Text>
         </Button>
 
-        <Button block rounded
+        <Button
+          block
+          rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BAIR</Text>
