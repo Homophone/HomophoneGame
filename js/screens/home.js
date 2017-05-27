@@ -58,12 +58,12 @@ class Home extends Component {
 
         <Text>{ this.props.value }</Text>
         <Button
-          onPress={ this.props.onAdd }
+          onPress={this.props.onAdd}
         >
           <Text>Add</Text>
         </Button>
         <Button
-          onPress={ this.props.onSubtract }
+          onPress={this.props.onSubtract}
         >
           <Text>Subtract</Text>
         </Button>
@@ -73,7 +73,10 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  value: PropTypes.number.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onSubtract: PropTypes.func.isRequired
 }
 
 const styles = StyleSheet.create({

@@ -3,7 +3,7 @@ import counter from './counter'
 // import visibilityFilter from './visibilityFilter'
 
 const counterApp = combineReducers({
-  counter,
+  counter
   // visibilityFilter
 })
 
