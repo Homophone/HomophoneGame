@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "ios": "react-native run-ios",
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "ios-deploy": "ios-deploy",
+    "pre-push": "npm run lint",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "lint-watch": "./node_modules/eslint-watch/bin/esw --watch --cache --fix"
+    "lint-watch": "./node_modules/eslint-watch/bin/esw --watch --cache --fix",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "ios-deploy": "ios-deploy",
+    "setup-git-hooks": "./scripts/setup-git-hooks"
   },
   "dependencies": {
     "@expo/vector-icons": "^5.0.0",
