@@ -1,0 +1,3 @@
+rootProject.name = 'HomophoneGame'
+
+include ':app'
