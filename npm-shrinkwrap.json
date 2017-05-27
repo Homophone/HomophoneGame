@@ -2,6 +2,11 @@
   "name": "HomophoneGame",
   "version": "0.0.1",
   "dependencies": {
+    "@expo/vector-icons": {
+      "version": "5.0.0",
+      "from": "@expo/vector-icons@latest",
+      "resolved": "https://registry.npmjs.org/@expo/vector-icons/-/vector-icons-5.0.0.tgz"
+    },
     "@shoutem/animation": {
       "version": "0.8.10",
       "from": "@shoutem/animation@>=0.8.9 <0.9.0",
@@ -4923,7 +4928,7 @@
     },
     "react-native-vector-icons": {
       "version": "4.1.1",
-      "from": "react-native-vector-icons@>=4.1.1 <4.2.0",
+      "from": "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-4.1.1.tgz",
       "resolved": "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-4.1.1.tgz"
     },
     "react-navigation": {
