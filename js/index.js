@@ -1,5 +1,5 @@
 import {
-  StackNavigator,
+  StackNavigator
 } from 'react-navigation'
 import Home from './screens/home'
 import Play from './screens/play'
@@ -17,13 +17,13 @@ const AppRouteConfigs = {
   Main: { screen: Home },
   Play: { screen: Play }
 }
-const AppNavigator = StackNavigator(AppRouteConfigs);
+const AppNavigator = StackNavigator(AppRouteConfigs)
 
 class AppWithNavigationState extends Component {
   render() {
     return (
-      <AppNavigator/>
-    );
+      <AppNavigator />
+    )
   }
 }
 
@@ -33,7 +33,7 @@ class HomophoneGame extends Component {
       <Provider store={store}>
         <AppWithNavigationState />
       </Provider>
-    );
+    )
   }
 }
 

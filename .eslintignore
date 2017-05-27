@@ -1,0 +1,9 @@
+patches/*
+node_modules/*
+generator-vydia/*
+android/*
+ios/*
+js/assets/*
+js/queries/*
+scripts/*
+coverage/*
