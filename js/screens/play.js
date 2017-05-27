@@ -8,9 +8,10 @@ import React, { Component } from 'react'
 import {
   AppRegistry,
   StyleSheet,
-  View
+  View,
+  Image
 } from 'react-native'
-import { StyleProvider, Button, Text, Icon } from 'native-base'
+import { Button, Text, Icon } from 'native-base'
 import { lightBlue, darkBlue, orange, white } from '../colors'
 
 export default class Play extends Component {
@@ -27,9 +28,35 @@ export default class Play extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{ fontSize: 46, color: white, fontWeight: 'bold', marginBottom: 30 }}>
-          Game
-        </Text>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require('../assets/images/bear.jpg')}
+            style={styles.image}
+          />
+        </View>
+
+        <View style={styles.progressContainer}>
+          <View style={styles.progress}>
+          </View>
+        </View>
+
+        <Button block rounded
+          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+        >
+          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BEAR</Text>
+        </Button>
+
+        <Button block rounded
+          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+        >
+          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BARE</Text>
+        </Button>
+
+        <Button block rounded
+          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+        >
+          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BAIR</Text>
+        </Button>
       </View>
     )
   }
@@ -42,6 +69,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: lightBlue,
     padding: 20
+  },
+  image: {
+    width: '100%'
+  },
+  imageContainer: {
+    width: 328,
+    height: 328,
+    overflow: 'hidden',
+    borderRadius: 4
+  },
+  progressContainer: {
+    width: '100%',
+    height: 20,
+    backgroundColor: white,
+    margin: 10,
+    borderRadius: 10
+  },
+  progress: {
+    width: '20%',
+    height: '100%',
+    backgroundColor: orange,
+    borderRadius: 10
   }
 })
 
