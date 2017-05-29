@@ -6,11 +6,11 @@ import {
 } from 'react-native'
 import { Button, Text, Icon } from 'native-base'
 import { lightBlue, darkBlue, white } from '../colors'
+import { debounce } from '../lib/utils'
 
-// redux test to be removed
 import { gql, graphql, compose } from 'react-apollo'
 import { connect } from 'react-redux'
-import { add, subtract } from '../actions'
+import { add, subtract, clearCurrentGame, setCurrentGame } from '../actions'
 
 class Home extends Component {
   static navigationOptions = {
@@ -20,6 +20,20 @@ class Home extends Component {
     },
     headerTintColor: darkBlue
   }
+
+  componentDidMount = () => {
+    this.props.clearCurrentGame()
+  }
+
+  onPressNewGame = debounce(() => {
+    const { navigate } = this.props.navigation
+
+    this.props.mutate()
+    .then(({ data: { startNewGame: { id } } }) => {
+      this.props.setCurrentGame(id)
+      navigate('Play')
+    })
+  })
 
   render() {
     const { navigate } = this.props.navigation
@@ -36,10 +50,7 @@ class Home extends Component {
           block
           rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
-          onPress={() => {
-            this.props.mutate()
-            .then(() => { navigate('Play') })
-          }}
+          onPress={this.onPressNewGame}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>PLAY</Text>
         </Button>
@@ -82,7 +93,9 @@ Home.propTypes = {
   value: PropTypes.number.isRequired,
   onAdd: PropTypes.func.isRequired,
   onSubtract: PropTypes.func.isRequired,
-  mutate: PropTypes.func.isRequired
+  mutate: PropTypes.func.isRequired,
+  setCurrentGame: PropTypes.func.isRequired,
+  clearCurrentGame: PropTypes.func.isRequired
 }
 
 const styles = StyleSheet.create({
@@ -105,6 +118,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onSubtract: () => {
     dispatch(subtract())
+  },
+  setCurrentGame: (id) => {
+    dispatch(setCurrentGame(id))
+  },
+  clearCurrentGame: () => {
+    dispatch(clearCurrentGame())
   }
 })
 
@@ -112,9 +131,6 @@ const mutation = gql`
   mutation StartNewGame {
     startNewGame {
       id
-      rounds {
-        id
-      }
     }
   }`
 
