@@ -12,6 +12,9 @@ import reactMixin from 'react-mixin'
 
 const ROUND_TIME_LIMIT = 5 * 1000 // 5 seconds in milliseconds
 
+// TODO: Remove:
+/* eslint-disable no-console */
+
 export default class Play extends Component {
   static navigationOptions = {
     title: '3 / 5',
