@@ -80,6 +80,7 @@ class Play extends Component {
           <Image
             source={{ uri: currentRound.giphyUrl }}
             style={styles.image}
+            resizeMode='contain'
           />
         </View>
 
@@ -110,10 +111,10 @@ Play.propTypes = {
     rounds: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       giphyUrl: PropTypes.string,
-      wordSet: PropTypes.arrayOf(PropTypes.shape({
+      wordSet: PropTypes.shape({
         id: PropTypes.string.isRequired,
         words: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
-      }).isRequired).isRequired
+      }).isRequired
     }).isRequired).isRequired
   }),
   loading: PropTypes.bool.isRequired,
@@ -129,7 +130,8 @@ const styles = StyleSheet.create({
     padding: 20
   },
   image: {
-    width: '100%'
+    width: 328,
+    height: 328
   },
   imageContainer: {
     width: 328,
