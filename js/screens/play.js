@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   AppRegistry,
   StyleSheet,
@@ -101,6 +101,23 @@ class Play extends Component {
       </View>
     )
   }
+}
+
+Play.propTypes = {
+  game: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    isActive: PropTypes.bool,
+    rounds: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      giphyUrl: PropTypes.string,
+      wordSet: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        words: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+      }).isRequired).isRequired
+    }).isRequired).isRequired
+  }),
+  loading: PropTypes.bool.isRequired,
+  id: PropTypes.string
 }
 
 const styles = StyleSheet.create({
