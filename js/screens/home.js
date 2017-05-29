@@ -4,7 +4,8 @@ import {
   StyleSheet,
   View
 } from 'react-native'
-import { Button, Text, Icon } from 'native-base'
+import { Button, Text } from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { lightBlue, darkBlue, white } from '../colors'
 import { debounce } from '../lib/utils'
 
@@ -44,33 +45,41 @@ class Home extends Component {
           ho·mo·phone
         </Text>
 
-        <Icon name='home' />
+        <View style={styles.iconContainer}>
+          <Icon name='hand-peace-o' style={styles.icon} />
+          <Icon name='puzzle-piece' style={styles.icon} />
+        </View>
 
-        <Button
-          block
-          rounded
-          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
-          onPress={this.onPressNewGame}
-        >
-          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>PLAY</Text>
-        </Button>
+        <View style={styles.actionsContainer}>
 
-        <Button
-          block
-          rounded
-          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
-          onPress={() => navigate('Stats')}
-        >
-          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>STATS</Text>
-        </Button>
+          <Button
+            block
+            rounded
+            style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+            onPress={this.onPressNewGame}
+          >
+            <Text style={{ color: darkBlue, fontWeight: 'bold' }}>PLAY</Text>
+          </Button>
 
-        <Button
-          block
-          rounded
-          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
-        >
-          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>LEADERBOARD</Text>
-        </Button>
+          <Button
+            block
+            rounded
+            style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+            onPress={() => navigate('Stats')}
+          >
+            <Text style={{ color: darkBlue, fontWeight: 'bold' }}>STATS</Text>
+          </Button>
+
+          <Button
+            block
+            rounded
+            style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+          >
+            <Text style={{ color: darkBlue, fontWeight: 'bold' }}>LEADERBOARD</Text>
+          </Button>
+
+        </View>
+
       </View>
     )
   }
@@ -89,6 +98,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: lightBlue,
+    padding: 20
+  },
+  iconContainer: {
+    flexDirection: 'row'
+  },
+  icon: {
+    fontSize: 60,
+    color: darkBlue,
+    marginRight: 10
+  },
+  actionsContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     padding: 20
   }
 })
