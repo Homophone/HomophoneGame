@@ -4,7 +4,8 @@ import {
   StyleSheet,
   View
 } from 'react-native'
-import { Button, Text, Icon } from 'native-base'
+import { Button, Text } from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { lightBlue, darkBlue, white } from '../colors'
 import { debounce } from '../lib/utils'
 
@@ -44,7 +45,10 @@ class Home extends Component {
           ho·mo·phone
         </Text>
 
-        <Icon name='home' />
+        <View style={styles.iconContainer}>
+          <Icon name='hand-peace-o' style={styles.icon} />
+          <Icon name='puzzle-piece' style={styles.icon} />
+        </View>
 
         <Button
           block
@@ -105,6 +109,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: lightBlue,
     padding: 20
+  },
+  iconContainer: {
+    flexDirection: 'row'
+  },
+  icon: {
+    fontSize: 60,
+    color: darkBlue,
+    marginRight: 10
   }
 })
 
