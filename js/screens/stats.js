@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import {
   AppRegistry,
   StyleSheet,
-  View
+  View,
+  ScrollView
 } from 'react-native'
 import { Text, Spinner } from 'native-base'
 import { lightBlue, darkBlue, orange, white } from '../colors'
@@ -24,18 +25,20 @@ class Stats extends Component {
       )
     }
     return (
-      <View style={styles.container}>
-        <Text style={{ color: orange, fontWeight: 'bold', fontSize: 20 }}>All Games</Text>
-        {this.props.games.map((game) => (
-          <View key={game.id}>
-            <Text>Game #{game.id}</Text>
-            <Text style={{ color: darkBlue }}>Rounds:</Text>
-            {game.rounds.map((round) => (
-              <Text key={round.id}>{round.id}</Text>
-            ))}
-          </View>
-        ))}
-      </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <Text style={{ color: orange, fontWeight: 'bold', fontSize: 20 }}>All Games</Text>
+          {this.props.games.map((game) => (
+            <View key={game.id}>
+              <Text>Game #{game.id}</Text>
+              <Text style={{ color: darkBlue }}>Rounds:</Text>
+              {game.rounds.map((round) => (
+                <Text key={round.id}>{round.id}</Text>
+              ))}
+            </View>
+          ))}
+        </View>
+      </ScrollView>
     )
   }
 }
@@ -65,7 +68,7 @@ const queryOptions = {
 }
 
 export default graphql(gql`
-  query stats {
+  query Stats {
     games {
       id
       isActive
