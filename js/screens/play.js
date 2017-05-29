@@ -7,6 +7,13 @@ import {
 } from 'react-native'
 import { Button, Text } from 'native-base'
 import { lightBlue, darkBlue, orange, white } from '../colors'
+import TimerMixin from 'react-timer-mixin'
+import reactMixin from 'react-mixin'
+
+const ROUND_TIME_LIMIT = 5 * 1000 // 5 seconds in milliseconds
+
+// TODO: Remove:
+/* eslint-disable no-console */
 
 export default class Play extends Component {
   static navigationOptions = {
@@ -15,6 +22,20 @@ export default class Play extends Component {
       backgroundColor: white
     },
     headerTintColor: darkBlue
+  }
+
+  componentDidMount = () => {
+    // TODO: Do this only once apollo data is present.
+    console.log(`You have ${ROUND_TIME_LIMIT / 1000} seconds!`)
+    this.timeout = this.setTimeout(
+      () => { console.log('Your time is up! YOU LOSE!') },
+      ROUND_TIME_LIMIT
+    )
+  }
+
+  onChoose = (word) => {
+    clearTimeout(this.timeout)
+    console.log('You chose: ' + word)
   }
 
   render() {
@@ -34,6 +55,7 @@ export default class Play extends Component {
         <Button
           block
           rounded
+          onPress={() => this.onChoose('bear')}
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BEAR</Text>
@@ -42,6 +64,7 @@ export default class Play extends Component {
         <Button
           block
           rounded
+          onPress={() => this.onChoose('bare')}
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BARE</Text>
@@ -50,6 +73,7 @@ export default class Play extends Component {
         <Button
           block
           rounded
+          onPress={() => this.onChoose('bair')}
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BAIR</Text>
@@ -90,5 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   }
 })
+
+reactMixin(Play.prototype, TimerMixin)
 
 AppRegistry.registerComponent('Play', () => Play)
