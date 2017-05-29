@@ -8,6 +8,7 @@ import { Button, Text, Icon } from 'native-base'
 import { lightBlue, darkBlue, white } from '../colors'
 
 // redux test to be removed
+import { gql, graphql, compose } from 'react-apollo'
 import { connect } from 'react-redux'
 import { add, subtract } from '../actions'
 
@@ -35,7 +36,10 @@ class Home extends Component {
           block
           rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
-          onPress={() => navigate('Play')}
+          onPress={() => {
+            this.props.mutate()
+            .then(() => { navigate('Play') })
+          }}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>PLAY</Text>
         </Button>
@@ -44,6 +48,7 @@ class Home extends Component {
           block
           rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+          onPress={() => navigate('Stats')}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>STATS</Text>
         </Button>
@@ -76,7 +81,8 @@ Home.propTypes = {
   navigation: PropTypes.object.isRequired,
   value: PropTypes.number.isRequired,
   onAdd: PropTypes.func.isRequired,
-  onSubtract: PropTypes.func.isRequired
+  onSubtract: PropTypes.func.isRequired,
+  mutate: PropTypes.func.isRequired
 }
 
 const styles = StyleSheet.create({
@@ -102,9 +108,27 @@ const mapDispatchToProps = (dispatch) => ({
   }
 })
 
-const ConnectedComponent = connect(
-  mapStateToProps,
-  mapDispatchToProps
+const mutation = gql`
+  mutation StartNewGame {
+    startNewGame {
+      id
+      rounds {
+        id
+      }
+    }
+  }`
+
+const mutationOptions = {
+  options: {
+    refetchQueries: [
+      'Stats'
+    ]
+  }
+}
+
+const ConnectedComponent = compose(
+  graphql(mutation, mutationOptions),
+  connect(mapStateToProps, mapDispatchToProps)
 )(Home)
 
 export default ConnectedComponent

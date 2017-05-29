@@ -1,18 +1,27 @@
 import { AppRegistry } from 'react-native'
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import counterApp from './reducers'
+import { createStore, applyMiddleware, compose } from 'redux'
+import rootReducer from './reducers'
 import React, { Component } from 'react'
 import AppWithNavigationState from './navigator'
+import { ApolloProvider } from 'react-apollo'
+import client from './lib/apollo'
+import logger from 'redux-logger'
 
-let store = createStore(counterApp)
+const store = createStore(
+  rootReducer,
+  {}, // initial state
+  compose(
+    applyMiddleware(client.middleware(), logger)
+  )
+)
+
 
 class HomophoneGame extends Component {
   render() {
     return (
-      <Provider store={store}>
+      <ApolloProvider store={store} client={client}>
         <AppWithNavigationState />
-      </Provider>
+      </ApolloProvider>
     )
   }
 }
