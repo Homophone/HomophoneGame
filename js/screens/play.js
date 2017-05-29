@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 import { debounce } from '../lib/utils'
 
 const ROUND_TIME_LIMIT = 5 * 1000 // 5 seconds in milliseconds
+const GET_READY_MIN_DURATION = 2 * 1000 // 2 seconds in milliseconds
 
 // TODO: Remove:
 /* eslint-disable no-console */
@@ -28,20 +29,11 @@ class Play extends Component {
     headerTintColor: darkBlue
   }
 
-  componentDidMount = () => {
-    const { game } = this.props
-
-    if (game) {
-      this.startCountdown()
-    }
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    const { game: prevGame } = this.props
-    const { game: nextGame } = nextProps
-
-    if (!prevGame && nextGame) {
-      this.startCountdown()
+  constructor(props) {
+    super(props)
+    this.state = {
+      imageIsLoaded: false,
+      surpassedGetReadyMinDuration: false
     }
   }
 
@@ -56,31 +48,62 @@ class Play extends Component {
     )
   }
 
+  onImageLoadStart = () => {
+    this.setTimeout(() => {
+      this.setState({
+        surpassedGetReadyMinDuration: true
+      })
+    }, GET_READY_MIN_DURATION)
+  }
+
+  onImageLoad = () => {
+    this.setState({
+      imageIsLoaded: true
+    })
+    this.startCountdown()
+  }
+
   onChoose = debounce((word) => {
     clearTimeout(this.timeout)
     this.timeout = undefined
     console.log('You chose: ' + word)
   })
 
+  renderGetReadyOverlay = () => (
+    <View style={styles.getReadyOverlay}>
+      <Text style={{
+        fontWeight: 'bold',
+        fontSize: 52,
+        color: white
+      }}
+      >
+        GET READY!
+      </Text>
+    </View>
+  )
+
   render() {
     const { loading, game, id } = this.props
-
     if (loading || !id) {
-      return (
-        <Spinner />
-      )
+      return <Spinner />
     }
 
+    const { imageIsLoaded, surpassedGetReadyMinDuration } = this.state
     const { rounds } = game
     const currentRound = rounds[rounds.length - 1]
 
     return (
       <View style={styles.container}>
+
+        {(!imageIsLoaded || !surpassedGetReadyMinDuration) && this.renderGetReadyOverlay()}
+
         <View style={styles.imageContainer}>
           <Image
             source={{ uri: currentRound.giphyUrl }}
             style={styles.image}
             resizeMode='contain'
+            onLoadStart={this.onImageLoadStart}
+            onLoad={this.onImageLoad}
           />
         </View>
 
@@ -128,6 +151,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: lightBlue,
     padding: 20
+  },
+  getReadyOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    zIndex: 99999,
+    backgroundColor: lightBlue,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   image: {
     width: 328,
