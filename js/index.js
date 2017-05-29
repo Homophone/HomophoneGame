@@ -5,12 +5,13 @@ import React, { Component } from 'react'
 import AppWithNavigationState from './navigator'
 import { ApolloProvider } from 'react-apollo'
 import client from './lib/apollo'
+import logger from 'redux-logger'
 
 const store = createStore(
   rootReducer,
   {}, // initial state
   compose(
-    applyMiddleware(client.middleware())
+    applyMiddleware(client.middleware(), logger)
   )
 )
 
