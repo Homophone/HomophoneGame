@@ -6,10 +6,11 @@ import {
 } from 'react-native'
 import { Button, Text, Icon } from 'native-base'
 import { lightBlue, darkBlue, white } from '../colors'
+import { debounce } from '../lib/utils'
 
 import { gql, graphql, compose } from 'react-apollo'
 import { connect } from 'react-redux'
-import { add, subtract, setCurrentGame } from '../actions'
+import { add, subtract, clearCurrentGame, setCurrentGame } from '../actions'
 
 class Home extends Component {
   static navigationOptions = {
@@ -20,7 +21,11 @@ class Home extends Component {
     headerTintColor: darkBlue
   }
 
-  onPressNewGame = () => {
+  componentDidMount = () => {
+    this.props.clearCurrentGame()
+  }
+
+  onPressNewGame = debounce(() => {
     const { navigate } = this.props.navigation
 
     this.props.mutate()
@@ -28,7 +33,7 @@ class Home extends Component {
       this.props.setCurrentGame(id)
       navigate('Play')
     })
-  }
+  })
 
   render() {
     const { navigate } = this.props.navigation
@@ -89,7 +94,8 @@ Home.propTypes = {
   onAdd: PropTypes.func.isRequired,
   onSubtract: PropTypes.func.isRequired,
   mutate: PropTypes.func.isRequired,
-  setCurrentGame: PropTypes.func.isRequired
+  setCurrentGame: PropTypes.func.isRequired,
+  clearCurrentGame: PropTypes.func.isRequired
 }
 
 const styles = StyleSheet.create({
@@ -115,6 +121,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setCurrentGame: (id) => {
     dispatch(setCurrentGame(id))
+  },
+  clearCurrentGame: () => {
+    dispatch(clearCurrentGame())
   }
 })
 

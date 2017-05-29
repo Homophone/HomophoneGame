@@ -5,12 +5,14 @@ import {
   View,
   Image
 } from 'react-native'
-import { Button, Text } from 'native-base'
+import { Button, Text, Spinner } from 'native-base'
 import { lightBlue, darkBlue, orange, white } from '../colors'
 import TimerMixin from 'react-timer-mixin'
 import reactMixin from 'react-mixin'
 import { gql, graphql, compose } from 'react-apollo'
 import { connect } from 'react-redux'
+
+import { debounce } from '../lib/utils'
 
 const ROUND_TIME_LIMIT = 5 * 1000 // 5 seconds in milliseconds
 
@@ -27,7 +29,26 @@ class Play extends Component {
   }
 
   componentDidMount = () => {
-    // TODO: Do this only once apollo data is present.
+    const { game } = this.props
+
+    if (game) {
+      this.startCountdown()
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const { game: prevGame } = this.props
+    const { game: nextGame } = nextProps
+
+    if (!prevGame && nextGame) {
+      this.startCountdown()
+    }
+  }
+
+  startCountdown = () => {
+    if (this.timeout) {
+      return
+    }
     console.log(`You have ${ROUND_TIME_LIMIT / 1000} seconds!`)
     this.timeout = this.setTimeout(
       () => { console.log('Your time is up! YOU LOSE!') },
@@ -35,17 +56,29 @@ class Play extends Component {
     )
   }
 
-  onChoose = (word) => {
+  onChoose = debounce((word) => {
     clearTimeout(this.timeout)
+    this.timeout = undefined
     console.log('You chose: ' + word)
-  }
+  })
 
   render() {
+    const { loading, game, id } = this.props
+
+    if (loading || !id) {
+      return (
+        <Spinner />
+      )
+    }
+
+    const { rounds } = game
+    const currentRound = rounds[rounds.length - 1]
+
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image
-            source={require('../assets/images/bear.jpg')}
+            source={{ uri: currentRound.giphyUrl }}
             style={styles.image}
           />
         </View>
@@ -54,32 +87,17 @@ class Play extends Component {
           <View style={styles.progress} />
         </View>
 
-        <Button
-          block
-          rounded
-          onPress={() => this.onChoose('bear')}
-          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
-        >
-          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BEAR</Text>
-        </Button>
-
-        <Button
-          block
-          rounded
-          onPress={() => this.onChoose('bare')}
-          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
-        >
-          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BARE</Text>
-        </Button>
-
-        <Button
-          block
-          rounded
-          onPress={() => this.onChoose('bair')}
-          style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
-        >
-          <Text style={{ color: darkBlue, fontWeight: 'bold' }}>BAIR</Text>
-        </Button>
+        {currentRound.wordSet.words.map((word) => (
+          <Button
+            key={word}
+            block
+            rounded
+            onPress={() => this.onChoose(word)}
+            style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+          >
+            <Text style={{ color: darkBlue, fontWeight: 'bold' }}>{word}</Text>
+          </Button>
+        ))}
       </View>
     )
   }
@@ -132,7 +150,7 @@ const query = gql`
     game(id: $id) {
       id
       isActive
-      round {
+      rounds {
         id
         giphyUrl
         wordSet {
@@ -143,19 +161,23 @@ const query = gql`
     }
   }`
 
-const queryOptions = {
+const queryOptions = ({
   options: ({ id }) => ({
+    skip: !id,
     variables: {
       id
     }
+  }),
+  props: ({ data, data: { loading, game } }) => ({
+    loading,
+    game
   })
-}
+})
 
 const ConnectedComponent = compose(
-  // graphql(query, queryOptions),
-  connect(mapStateToProps, mapDispatchToProps)
+  connect(mapStateToProps, mapDispatchToProps),
+  graphql(query, queryOptions)
 )(Play)
-
 
 export default ConnectedComponent
 
