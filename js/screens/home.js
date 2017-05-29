@@ -11,7 +11,7 @@ import { debounce } from '../lib/utils'
 
 import { gql, graphql, compose } from 'react-apollo'
 import { connect } from 'react-redux'
-import { add, subtract, clearCurrentGame, setCurrentGame } from '../actions'
+import { clearCurrentGame, setCurrentGame } from '../actions'
 
 class Home extends Component {
   static navigationOptions = {
@@ -75,18 +75,6 @@ class Home extends Component {
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>LEADERBOARD</Text>
         </Button>
-
-        <Text>{ this.props.value }</Text>
-        <Button
-          onPress={this.props.onAdd}
-        >
-          <Text>Add</Text>
-        </Button>
-        <Button
-          onPress={this.props.onSubtract}
-        >
-          <Text>Subtract</Text>
-        </Button>
       </View>
     )
   }
@@ -94,9 +82,6 @@ class Home extends Component {
 
 Home.propTypes = {
   navigation: PropTypes.object.isRequired,
-  value: PropTypes.number.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onSubtract: PropTypes.func.isRequired,
   mutate: PropTypes.func.isRequired,
   setCurrentGame: PropTypes.func.isRequired,
   clearCurrentGame: PropTypes.func.isRequired
@@ -121,16 +106,9 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-  value: state.counter.value
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onAdd: () => {
-    dispatch(add())
-  },
-  onSubtract: () => {
-    dispatch(subtract())
-  },
   setCurrentGame: (id) => {
     dispatch(setCurrentGame(id))
   },
