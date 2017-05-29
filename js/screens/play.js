@@ -185,7 +185,7 @@ const queryOptions = ({
       id
     }
   }),
-  props: ({ data, data: { loading, game } }) => ({
+  props: ({ data: { loading, game } }) => ({
     loading,
     game
   })
