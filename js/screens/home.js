@@ -81,7 +81,8 @@ Home.propTypes = {
   navigation: PropTypes.object.isRequired,
   value: PropTypes.number.isRequired,
   onAdd: PropTypes.func.isRequired,
-  onSubtract: PropTypes.func.isRequired
+  onSubtract: PropTypes.func.isRequired,
+  mutate: PropTypes.func.isRequired
 }
 
 const styles = StyleSheet.create({
