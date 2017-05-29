@@ -9,13 +9,15 @@ import { Button, Text } from 'native-base'
 import { lightBlue, darkBlue, orange, white } from '../colors'
 import TimerMixin from 'react-timer-mixin'
 import reactMixin from 'react-mixin'
+import { gql, graphql, compose } from 'react-apollo'
+import { connect } from 'react-redux'
 
 const ROUND_TIME_LIMIT = 5 * 1000 // 5 seconds in milliseconds
 
 // TODO: Remove:
 /* eslint-disable no-console */
 
-export default class Play extends Component {
+class Play extends Component {
   static navigationOptions = {
     title: '3 / 5',
     headerStyle: {
@@ -117,4 +119,44 @@ const styles = StyleSheet.create({
 
 reactMixin(Play.prototype, TimerMixin)
 
-AppRegistry.registerComponent('Play', () => Play)
+const mapStateToProps = (state) => ({
+  id: state.currentGame.id
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  // TODO select answer or run out of time
+})
+
+const query = gql`
+  query CurrentGame ($id: ID!) {
+    game(id: $id) {
+      id
+      isActive
+      round {
+        id
+        giphyUrl
+        wordSet {
+          id
+          words
+        }
+      }
+    }
+  }`
+
+const queryOptions = {
+  options: ({ id }) => ({
+    variables: {
+      id
+    }
+  })
+}
+
+const ConnectedComponent = compose(
+  // graphql(query, queryOptions),
+  connect(mapStateToProps, mapDispatchToProps)
+)(Play)
+
+
+export default ConnectedComponent
+
+AppRegistry.registerComponent('Play', () => ConnectedComponent)

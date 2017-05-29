@@ -7,7 +7,6 @@ import {
 import { Button, Text, Icon } from 'native-base'
 import { lightBlue, darkBlue, white } from '../colors'
 
-// redux test to be removed
 import { gql, graphql, compose } from 'react-apollo'
 import { connect } from 'react-redux'
 import { add, subtract, setCurrentGame } from '../actions'
