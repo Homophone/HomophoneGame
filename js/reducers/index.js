@@ -3,10 +3,12 @@ import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import { persistStore, autoRehydrate } from 'redux-persist'
 import logger from 'redux-logger'
 import counter from './counter'
+import currentGame from './currentGame'
 import client from '../lib/apollo'
 
 const rootReducer = combineReducers({
   counter,
+  currentGame,
   apollo: client.reducer()
 })
 
