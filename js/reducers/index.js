@@ -4,12 +4,10 @@ import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 // TODO: Re-introduce persister but blacklist some apollo stuff.
 // import { persistStore, autoRehydrate } from 'redux-persist'
 import logger from 'redux-logger'
-import counter from './counter'
 import currentGame from './currentGame'
 import client from '../lib/apollo'
 
 const rootReducer = combineReducers({
-  counter,
   currentGame,
   apollo: client.reducer()
 })
