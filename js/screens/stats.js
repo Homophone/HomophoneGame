@@ -27,7 +27,13 @@ class Stats extends Component {
       <View style={styles.container}>
         <Text style={{ color: orange, fontWeight: 'bold', fontSize: 20 }}>All Games</Text>
         {this.props.games.map((game) => (
-          <Text key={game.id}>{game.id}</Text>
+          <View key={game.id}>
+            <Text>Game #{game.id}</Text>
+            <Text style={{ color: darkBlue }}>Rounds:</Text>
+            {game.rounds.map((round) => (
+              <Text key={round.id}>{round.id}</Text>
+            ))}
+          </View>
         ))}
       </View>
     )
@@ -63,6 +69,9 @@ export default graphql(gql`
     games {
       id
       isActive
+      rounds {
+        id
+      }
     }
   }
 `, queryOptions)(Stats)
