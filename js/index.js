@@ -4,6 +4,8 @@ import { createStore } from 'redux'
 import counterApp from './reducers'
 import React, { Component } from 'react'
 import AppWithNavigationState from './navigator'
+import { ApolloProvider } from 'react-apollo'
+import client from './lib/apollo'
 
 let store = createStore(counterApp)
 
@@ -11,7 +13,9 @@ class HomophoneGame extends Component {
   render() {
     return (
       <Provider store={store}>
-        <AppWithNavigationState />
+        <ApolloProvider client={client}>
+          <AppWithNavigationState />
+        </ApolloProvider>
       </Provider>
     )
   }

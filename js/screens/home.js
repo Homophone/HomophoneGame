@@ -44,6 +44,7 @@ class Home extends Component {
           block
           rounded
           style={{ backgroundColor: white, marginTop: 5, marginBottom: 5 }}
+          onPress={() => navigate('Stats')}
         >
           <Text style={{ color: darkBlue, fontWeight: 'bold' }}>STATS</Text>
         </Button>
