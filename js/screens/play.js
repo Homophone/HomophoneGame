@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import {
+  Animated,
   AppRegistry,
   StyleSheet,
   View,
   Image
 } from 'react-native'
 import { Button, Text } from 'native-base'
-import { lightBlue, darkBlue, orange, white } from '../colors'
+import { lightBlue, darkBlue, orange, burntOrange, white } from '../colors'
 import TimerMixin from 'react-timer-mixin'
 import reactMixin from 'react-mixin'
 import { gql, graphql, compose } from 'react-apollo'
@@ -17,6 +18,8 @@ import { debounce } from '../lib/utils'
 
 const ROUND_TIME_LIMIT = 5 * 1000 // 5 seconds in milliseconds
 const GET_READY_MIN_DURATION = 1 * 1000 // 1 seconds in milliseconds
+const ROUND_ANIMATION_START = 0
+const ROUND_ANIMATION_END = 100
 
 class Play extends Component {
   static navigationOptions = {
@@ -31,7 +34,8 @@ class Play extends Component {
     super(props)
     this.state = {
       imageIsLoaded: false,
-      surpassedGetReadyMinDuration: false
+      surpassedGetReadyMinDuration: false,
+      roundAnim: new Animated.Value(ROUND_ANIMATION_START)
     }
   }
 
@@ -58,11 +62,18 @@ class Play extends Component {
 
   newRound = () => {
     const { newRound, setCurrentRound } = this.props
+    const { roundAnim } = this.state
     setCurrentRound(null)
 
     this.setState({
       imageIsLoaded: false
     })
+
+    roundAnim.resetAnimation()
+    Animated.timing(roundAnim, {
+      toValue: ROUND_ANIMATION_END,
+      duration: ROUND_TIME_LIMIT
+    }).start()
 
     return newRound().then(({ data, data: { newRound } }) => {
       setCurrentRound(newRound.id)
@@ -199,7 +210,17 @@ class Play extends Component {
         </View>
 
         <View style={styles.progressContainer}>
-          <View style={styles.progress} />
+          <Animated.View
+            style={{
+              height: '100%',
+              backgroundColor: orange,
+              borderRadius: 10,
+              width: this.state.roundAnim.interpolate({
+                inputRange: [ROUND_ANIMATION_START, ROUND_ANIMATION_END],
+                outputRange: ['100%', '5%']
+              })
+            }}
+          />
         </View>
 
         {round.wordSet.words.map((word) => (
@@ -275,15 +296,10 @@ const styles = StyleSheet.create({
   progressContainer: {
     width: '100%',
     height: 20,
-    backgroundColor: white,
+    backgroundColor: burntOrange,
     margin: 10,
-    borderRadius: 10
-  },
-  progress: {
-    width: '20%',
-    height: '100%',
-    backgroundColor: orange,
-    borderRadius: 10
+    borderRadius: 10,
+    transform: [{ rotate: '180deg' }] // Rope burn left to right.
   }
 })
 
