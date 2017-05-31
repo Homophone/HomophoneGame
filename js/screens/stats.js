@@ -67,6 +67,7 @@ const queryOptions = {
   })
 }
 
+// TODO: Get games.roundsCount instead.
 export default graphql(gql`
   query Stats {
     games {

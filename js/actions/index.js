@@ -6,3 +6,8 @@ export const setCurrentGame = (id) => ({
 export const clearCurrentGame = () => ({
   type: 'CLEAR_CURRENT_GAME'
 })
+
+export const setCurrentRound = (roundId) => ({
+  type: 'SET_CURRENT_ROUND',
+  payload: roundId
+})

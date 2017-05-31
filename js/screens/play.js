@@ -5,24 +5,22 @@ import {
   View,
   Image
 } from 'react-native'
-import { Button, Text, Spinner } from 'native-base'
+import { Button, Text } from 'native-base'
 import { lightBlue, darkBlue, orange, white } from '../colors'
 import TimerMixin from 'react-timer-mixin'
 import reactMixin from 'react-mixin'
 import { gql, graphql, compose } from 'react-apollo'
 import { connect } from 'react-redux'
+import { setCurrentRound } from '../actions'
 
 import { debounce } from '../lib/utils'
 
 const ROUND_TIME_LIMIT = 5 * 1000 // 5 seconds in milliseconds
-const GET_READY_MIN_DURATION = 2 * 1000 // 2 seconds in milliseconds
-
-// TODO: Remove:
-/* eslint-disable no-console */
+const GET_READY_MIN_DURATION = 1 * 1000 // 1 seconds in milliseconds
 
 class Play extends Component {
   static navigationOptions = {
-    title: '3 / 5',
+    title: 'Play',
     headerStyle: {
       backgroundColor: white
     },
@@ -37,18 +35,64 @@ class Play extends Component {
     }
   }
 
-  startCountdown = () => {
-    if (this.timeout) {
-      return
+  componentDidMount = () => {
+    const { gameId } = this.props
+
+    if (gameId) {
+      this.newRound()
     }
-    console.log(`You have ${ROUND_TIME_LIMIT / 1000} seconds!`)
-    this.timeout = this.setTimeout(
-      () => { console.log('Your time is up! YOU LOSE!') },
-      ROUND_TIME_LIMIT
-    )
   }
 
-  onImageLoadStart = () => {
+  componentWillReceiveProps = (nextProps) => {
+    const { gameId: prevGameId, roundId: prevRoundId } = this.props
+    const { gameId: nextGameId, roundId: nextRoundId } = nextProps
+
+    if (!prevGameId && nextGameId) {
+      this.newRound()
+    }
+
+    if (nextRoundId && prevRoundId !== nextRoundId) {
+      this.startGetReadyTimer()
+    }
+  }
+
+  newRound = () => {
+    const { newRound, setCurrentRound } = this.props
+    setCurrentRound(null)
+
+    this.setState({
+      imageIsLoaded: false
+    })
+
+    return newRound().then(({ data, data: { newRound } }) => {
+      setCurrentRound(newRound.id)
+      return data
+    })
+  }
+
+  chooseWord = debounce((word) => {
+    const { chooseWord } = this.props
+
+    this.clearRoundLimitTimer()
+
+    return chooseWord(word).then(({ data, data: { chooseWord } }) => {
+      const { game: { isActive } } = chooseWord
+      const { navigation: { navigate } } = this.props
+
+      if (isActive) {
+        return this.newRound().then(({ newRound }) => {
+          this.props.refetch({ roundId: newRound.id })
+        })
+        .then(() => data)
+      } else {
+        // TODD: Show the game score screen.
+        navigate('Stats')
+        return data
+      }
+    })
+  })
+
+  startGetReadyTimer = () => {
     this.setTimeout(() => {
       this.setState({
         surpassedGetReadyMinDuration: true
@@ -56,18 +100,39 @@ class Play extends Component {
     }, GET_READY_MIN_DURATION)
   }
 
-  onImageLoad = () => {
+  startRoundLimitTimer = () => {
+    if (this.roundLimitTimer) {
+      /* eslint-disable no-console */
+      console.error('returning startRoundLimitTimer because this.roundLimitTimer is present')
+      /* eslint-enable no-console */
+      return
+    }
+
     this.setState({
       imageIsLoaded: true
     })
-    this.startCountdown()
+
+    this.roundLimitTimer = this.setTimeout(
+      () => {
+        this.chooseWord(null)
+      },
+      ROUND_TIME_LIMIT
+    )
   }
 
-  onChoose = debounce((word) => {
-    clearTimeout(this.timeout)
-    this.timeout = undefined
-    console.log('You chose: ' + word)
-  })
+  clearRoundLimitTimer = () => {
+    clearTimeout(this.roundLimitTimer)
+    this.roundLimitTimer = undefined
+  }
+
+  onImageLoad = () => {
+    this.startRoundLimitTimer()
+  }
+
+  onChoose = (word) => {
+    this.clearRoundLimitTimer()
+    this.chooseWord(word)
+  }
 
   renderGetReadyOverlay = () => (
     <View style={styles.getReadyOverlay}>
@@ -79,18 +144,45 @@ class Play extends Component {
       >
         GET READY!
       </Text>
+      {this.props.game && (
+        <View>
+          <Text style={{
+            fontWeight: 'bold',
+            fontSize: 42,
+            color: white
+          }}
+          >
+            You have
+          </Text>
+          <Text style={{
+            fontWeight: 'bold',
+            fontSize: 52,
+            color: white
+          }}
+          >
+            {this.props.game.livesRemaining}
+          </Text>
+          <Text style={{
+            fontWeight: 'bold',
+            fontSize: 42,
+            color: white
+          }}
+          >
+            {`${this.props.game.livesRemaining === 1 ? 'life' : 'lives'} left`}
+          </Text>
+        </View>
+      )}
     </View>
   )
 
   render() {
-    const { loading, game, id } = this.props
-    if (loading || !id) {
-      return <Spinner />
+    const { loading, gameId, roundId, round } = this.props
+
+    if (loading || !gameId || !roundId) {
+      return this.renderGetReadyOverlay()
     }
 
     const { imageIsLoaded, surpassedGetReadyMinDuration } = this.state
-    const { rounds } = game
-    const currentRound = rounds[rounds.length - 1]
 
     return (
       <View style={styles.container}>
@@ -99,10 +191,9 @@ class Play extends Component {
 
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: currentRound.giphyUrl }}
+            source={{ uri: round.giphyUrl }}
             style={styles.image}
             resizeMode='contain'
-            onLoadStart={this.onImageLoadStart}
             onLoad={this.onImageLoad}
           />
         </View>
@@ -111,7 +202,7 @@ class Play extends Component {
           <View style={styles.progress} />
         </View>
 
-        {currentRound.wordSet.words.map((word) => (
+        {round.wordSet.words.map((word) => (
           <Button
             key={word}
             block
@@ -131,17 +222,26 @@ Play.propTypes = {
   game: PropTypes.shape({
     id: PropTypes.string.isRequired,
     isActive: PropTypes.bool,
-    rounds: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      giphyUrl: PropTypes.string,
-      wordSet: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        words: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
-      }).isRequired
-    }).isRequired).isRequired
+    livesRemaining: PropTypes.number.isRequired
   }),
-  loading: PropTypes.bool.isRequired,
-  id: PropTypes.string
+  round: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    giphyUrl: PropTypes.string,
+    wordSet: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      words: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+    }).isRequired
+  }),
+  loading: PropTypes.bool,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired,
+  refetch: PropTypes.func,
+  newRound: PropTypes.func.isRequired,
+  chooseWord: PropTypes.func.isRequired,
+  setCurrentRound: PropTypes.func.isRequired,
+  gameId: PropTypes.string,
+  roundId: PropTypes.string
 }
 
 const styles = StyleSheet.create({
@@ -190,45 +290,123 @@ const styles = StyleSheet.create({
 reactMixin(Play.prototype, TimerMixin)
 
 const mapStateToProps = (state) => ({
-  id: state.currentGame.id
+  gameId: state.currentGame.id,
+  roundId: state.currentGame.roundId
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  setCurrentRound: (roundId) => {
+    dispatch(setCurrentRound(roundId))
+  }
   // TODO select answer or run out of time
 })
 
 const query = gql`
-  query CurrentGame ($id: ID!) {
-    game(id: $id) {
+  query CurrentGameAndRound ($gameId: ID!, $roundId: ID!) {
+    game (id: $gameId) {
       id
       isActive
-      rounds {
+      livesRemaining
+    }
+    round (id: $roundId) {
+      id
+      giphyUrl
+      wordSet {
         id
-        giphyUrl
-        wordSet {
-          id
-          words
-        }
+        words
       }
     }
   }`
 
 const queryOptions = ({
-  options: ({ id }) => ({
-    skip: !id,
+  options: ({ gameId, roundId }) => ({
+    skip: !gameId || !roundId,
     variables: {
-      id
+      gameId,
+      roundId
     }
   }),
-  props: ({ data: { loading, game } }) => ({
+  props: ({ data: { loading, refetch, game, round } }) => ({
     loading,
-    game
+    refetch,
+    game,
+    round
+  })
+})
+
+const newRound = gql`
+  mutation NewRound ($gameId: ID!) {
+    newRound (gameId: $gameId) {
+      id
+      correctAnswer
+      giphyUrl
+      wordSet {
+        id
+        words
+      }
+      game {
+        id
+        livesRemaining
+        isActive
+      }
+    }
+  }`
+
+const newRoundOptions = ({
+  name: 'newRound',
+  props: ({ ownProps, newRound }) => ({
+    newRound: () => newRound({
+      variables: {
+        gameId: ownProps.gameId
+      }
+    })
+  })
+})
+
+const chooseWord = gql`
+  mutation ChooseWord ($roundId: ID!, $word: String) {
+    chooseWord (roundId: $roundId, word: $word) {
+      id
+      correctAnswer
+      selectedAnswer
+      isCorrect
+      game {
+        id
+        livesRemaining
+        isActive
+      }
+    }
+  }`
+
+const chooseWordOptions = ({
+  name: 'chooseWord',
+  props: ({ ownProps, chooseWord }) => ({
+    chooseWord: (word) => chooseWord({
+      variables: {
+        roundId: ownProps.roundId,
+        word
+      }
+      // TODO: optimisticResponse in chooseWord mutation.
+      // optimisticResponse: {
+      //   __typename: 'Mutation',
+      //   submitComment: {
+      //     __typename: 'Comment',
+      //     // Note that we can access the props of the container at `ownProps` if we
+      //     // need that information to compute the optimistic response
+      //     postedBy: ownProps.currentUser,
+      //     createdAt: +new Date,
+      //     content: commentContent
+      //   }
+      // }
+    })
   })
 })
 
 const ConnectedComponent = compose(
   connect(mapStateToProps, mapDispatchToProps),
-  graphql(query, queryOptions)
+  graphql(query, queryOptions),
+  graphql(newRound, newRoundOptions),
+  graphql(chooseWord, chooseWordOptions)
 )(Play)
 
 export default ConnectedComponent

@@ -1,17 +1,25 @@
 const initialState = {
-  id: null
+  id: null,
+  roundId: null
 }
 
 const currentGame = (state = initialState, action) => {
   switch (action.type) {
   case 'SET_CURRENT_GAME':
     return {
+      ...initialState,
       id: action.payload
     }
 
   case 'CLEAR_CURRENT_GAME':
     return {
-      id: null
+      ...initialState
+    }
+
+  case 'SET_CURRENT_ROUND':
+    return {
+      ...state,
+      roundId: action.payload
     }
 
   default:
