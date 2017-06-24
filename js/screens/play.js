@@ -97,7 +97,7 @@ class Play extends Component {
         .then(() => data)
       } else {
         // TODD: Show the game score screen.
-        navigate('Stats')
+        navigate('Score')
         return data
       }
     })
