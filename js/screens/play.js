@@ -88,7 +88,7 @@ class Play extends Component {
 
     return chooseWord(word).then(({ data, data: { chooseWord } }) => {
       const { game: { isActive } } = chooseWord
-      const { navigation: { navigate } } = this.props
+      const { navigation: { navigate, goBack } } = this.props
 
       if (isActive) {
         return this.newRound().then(({ newRound }) => {
@@ -97,6 +97,7 @@ class Play extends Component {
         .then(() => data)
       } else {
         // TODD: Show the game score screen.
+        goBack(null)
         navigate('Stats')
         return data
       }
